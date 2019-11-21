@@ -8,26 +8,28 @@ import pygame
 import tkinter as tk
 
 from matrix2 import *
-def getBattles():
-	attacker=7
+from risk_simulator import *
+from time_pass import *
+#def getBattles():
+#	attacker=7
 
-	defender=6
+#	defender=6
 
-	no_of_battles=0
+#	no_of_battles=0
 
-	while (attacker!=0 and defender!=0):
-		aturn = random.choice([1,2,3,4,5,6])
-		dturn = random.choice([1,2,3,4,5,6])
-		if aturn>dturn:
-			defender=defender-1
-		else:
-			attacker=attacker-1
-		no_of_battles=no_of_battles+1
+#	while (attacker!=0 and defender!=0):
+#		aturn = random.choice([1,2,3,4,5,6])
+#		dturn = random.choice([1,2,3,4,5,6])
+#		if aturn>dturn:
+#			defender=defender-1
+#		else:
+#			attacker=attacker-1
+#		no_of_battles=no_of_battles+1
 
-	if(attacker==0):
-		return no_of_battles,0,1
-	else:
-		return no_of_battles,1,0
+#	if(attacker==0):
+#		return no_of_battles,0,1
+#	else:
+#		return no_of_battles,1,0
 
 
 def plotter():
@@ -36,23 +38,35 @@ def plotter():
    		return
 	print(inp.get())
 	print(type(inp.get()))
+
+	if inpa.get()=='':
+		tkMessageBox.showerror("Error","Please enter No of Attackers!!!!")
+   		return
+   	if inpd.get()=='':
+		tkMessageBox.showerror("Error","Please enter No of Defenders!!!!")
+   		return
+
 	max_no_of_iterations=inp.get()
+	attack=inpa.get()
+	defend=inpd.get()
 
-
+	attack=int(attack)
+	defend=int(defend)
 	max_no_of_iterations=int(max_no_of_iterations)
    	x=[]
    	y=[]
    	for i in range(1,max_no_of_iterations+1,1):
    		ans=0
    		for j in range(1,i+1,1):
-   			num,a,d=getBattles()
+   			num,a,d=getBattles(attack,defend)
    			ans=ans+num
    		ans=float(ans)/i
    		x.append(i)
    		y.append(ans)
-    # plotting the points  
+    # plotting the points 
+	num,v,b=theoretical_dynamic(attack,defend)
 	plt.plot(x, y) 
-	plt.axhline(y=10.168180083907123, color='r', linestyle='-',label="Theoretical battles")
+	plt.axhline(y=num, color='r', linestyle='-',label="Theoretical battles")
 	# naming the x axis 
 	plt.xlabel('NO OF ITERATIONS') 
 	# naming the y axis 
@@ -72,8 +86,19 @@ def plotter1():
 		return
 	print(inp1.get())
 	print(type(inp1.get()))
+	if inpa.get()=='':
+		tkMessageBox.showerror("Error","Please enter No of Attackers!!!!")
+   		return
+   	if inpd.get()=='':
+		tkMessageBox.showerror("Error","Please enter No of Defenders!!!!")
+   		return
 	max_no_of_iterations=inp1.get()
 	max_no_of_iterations=int(max_no_of_iterations)
+
+	attack=inpa.get()
+	defend=inpd.get()
+	attack=int(attack)
+	defend=int(defend)
 	x=[]
 	y1=[]
 	y2=[]
@@ -82,7 +107,7 @@ def plotter1():
 		awin=0
 		bwin=0
 		for j in range(1,i,1):
-			res,a,d=getBattles()
+			res,a,d=getBattles(attack,defend)
 			ans=ans+res
 			awin=awin+a
 			bwin=bwin+d
@@ -90,10 +115,11 @@ def plotter1():
 		y1.append(float(awin)/i)
 		y2.append(float(bwin)/i)
 	
+	num,v,b=theoretical_dynamic(attack,defend)
 	plt.plot(x, y1)
 	plt.plot(x, y2) 
-	plt.axhline(y=0.3797688225251342, color='r', linestyle='--',label="Attacker winning")
-	plt.axhline(y=0.6202311774748666, color='k', linestyle='--',label="Attacker winning")
+	plt.axhline(y=v, color='r', linestyle='--',label="Attacker winning")
+	plt.axhline(y=b, color='k', linestyle='--',label="Attacker winning")
 	# naming the x axis 
 	plt.xlabel('NO OF ITERATIONS') 
 	# naming the y axis 
@@ -123,21 +149,41 @@ tb2="Enter number of simulations:"
 
 tb3="Enter number of iterations for Probability:"
 
-wtext = tk.Label(root, 
+tb4="Enter no. of attackers:"
+
+tb5="Enter no. of defenders:"
+
+wa = tk.Label(root, 
               justify=tk.LEFT,
               padx = 10, 
-              text=tb1,fg="blue",font=2).place(x=10,y=260)
+              text=tb4,fg="green",font=2).place(x=10,y=250)
+inpa=tk.StringVar()
+ea = tk.Entry(root,textvariable=inpa,width=4).place(x=200,y=250)
+
+
+wd = tk.Label(root, 
+              justify=tk.LEFT,
+              padx = 10, 
+              text=tb5,fg="green",font=2).place(x=250,y=250)
+inpd=tk.StringVar()
+ed = tk.Entry(root,textvariable=inpd,width=4).place(x=450,y=250)
+
+
+#wtext = tk.Label(root, 
+ #             justify=tk.LEFT,
+  #            padx = 10, 
+   #           text=tb1,fg="blue",font=2).place(x=10,y=290)
 
 wtext1 = tk.Label(root, 
               justify=tk.LEFT,
               padx = 10, 
-              text=tb2,fg="red",font=2).place(x=10,y=300)
+              text=tb2,fg="red",font=2).place(x=10,y=330)
 
 inp=tk.StringVar()
-e1 = tk.Entry(root,textvariable=inp).place(x=270,y=300)
+e1 = tk.Entry(root,textvariable=inp,width=8).place(x=270,y=330)
 
 
-plot_getter = tk.Button(root, text="Get Plot", command=plotter).place(x=450,y=300)  
+plot_getter = tk.Button(root, text="Get Plot", command=plotter).place(x=350,y=330) 
 
 
 wtextw = tk.Label(root, 
@@ -146,10 +192,10 @@ wtextw = tk.Label(root,
               text=tb3,fg="orange",font=2).place(x=10,y=400)
 
 inp1=tk.StringVar()
-e2 = tk.Entry(root,textvariable=inp1).place(x=370,y=400)
+e2 = tk.Entry(root,textvariable=inp1,width=8).place(x=370,y=400)
 
 
-plot_getter1 = tk.Button(root, text="Plot Probability", command=plotter1).place(x=250,y=450)
+plot_getter1 = tk.Button(root, text="Plot Probability", command=plotter1).place(x=450,y=400)
 
 
 root.mainloop()
