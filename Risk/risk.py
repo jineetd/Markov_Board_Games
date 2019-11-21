@@ -2,10 +2,11 @@
 #import Canvas
 import random
 import matplotlib.pyplot as plt 
-import tkMessageBox
-import numpy as np
-import pygame
 import tkinter as tk
+import tkinter.messagebox
+import numpy as np
+#import pygame
+#import tkinter as tk
 
 from matrix2 import *
 from risk_simulator import *
@@ -35,16 +36,16 @@ from time_pass import *
 def plotter():
 	if inp.get()=='':
 		tkMessageBox.showerror("Error","Please enter No of Iterations!!!!")
-   		return
+		return
 	print(inp.get())
 	print(type(inp.get()))
 
 	if inpa.get()=='':
 		tkMessageBox.showerror("Error","Please enter No of Attackers!!!!")
-   		return
-   	if inpd.get()=='':
+		return
+	if inpd.get()=='':
 		tkMessageBox.showerror("Error","Please enter No of Defenders!!!!")
-   		return
+		return
 
 	max_no_of_iterations=inp.get()
 	attack=inpa.get()
@@ -53,20 +54,22 @@ def plotter():
 	attack=int(attack)
 	defend=int(defend)
 	max_no_of_iterations=int(max_no_of_iterations)
-   	x=[]
-   	y=[]
-   	for i in range(1,max_no_of_iterations+1,1):
-   		ans=0
-   		for j in range(1,i+1,1):
-   			num,a,d=getBattles(attack,defend)
-   			ans=ans+num
-   		ans=float(ans)/i
-   		x.append(i)
-   		y.append(ans)
+	x=[]
+	y=[]
+	for i in range(1,max_no_of_iterations+1,1):
+		ans=0
+		for j in range(1,i+1,1):
+			num,a,d=getBattles(attack,defend)
+			ans=ans+num
+		ans=float(ans)/i
+		x.append(i)
+		y.append(ans)
     # plotting the points 
 	num,v,b=theoretical_dynamic(attack,defend)
-	plt.plot(x, y) 
+	plt.plot(x, y , label = 'Simulated no. of battles')
+	#plt.legend(['Simulated no. of battles']) 
 	plt.axhline(y=num, color='r', linestyle='-',label="Theoretical battles")
+	leg = plt.legend();
 	# naming the x axis 
 	plt.xlabel('NO OF ITERATIONS') 
 	# naming the y axis 
@@ -88,10 +91,10 @@ def plotter1():
 	print(type(inp1.get()))
 	if inpa.get()=='':
 		tkMessageBox.showerror("Error","Please enter No of Attackers!!!!")
-   		return
-   	if inpd.get()=='':
+		return
+	if inpd.get()=='':
 		tkMessageBox.showerror("Error","Please enter No of Defenders!!!!")
-   		return
+		return
 	max_no_of_iterations=inp1.get()
 	max_no_of_iterations=int(max_no_of_iterations)
 
@@ -116,10 +119,13 @@ def plotter1():
 		y2.append(float(bwin)/i)
 	
 	num,v,b=theoretical_dynamic(attack,defend)
-	plt.plot(x, y1)
-	plt.plot(x, y2) 
-	plt.axhline(y=v, color='r', linestyle='--',label="Attacker winning")
-	plt.axhline(y=b, color='k', linestyle='--',label="Attacker winning")
+	plt.plot(x, y1 , label = 'Attacker Probability')
+	#plt.legend(['Attacker Probability'])
+	plt.plot(x, y2 , label = 'Defender Probability') 
+	#plt.legend(['Defender Probability'])
+	plt.axhline(y=v, color='k', linestyle='--',label="Theoretical attacker win Probability")
+	plt.axhline(y=b, color='r', linestyle='--',label="Theoretical defender win Probability")
+	leg = plt.legend();
 	# naming the x axis 
 	plt.xlabel('NO OF ITERATIONS') 
 	# naming the y axis 
@@ -127,6 +133,7 @@ def plotter1():
 
 	# giving a title to my graph 
 	plt.title('SIMULATED PROBABILITIES V/S NO OF ITERATIONS')
+	plt.legend
 	# function to show the plot 
 	plt.show()
 
