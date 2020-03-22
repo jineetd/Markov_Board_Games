@@ -11,6 +11,7 @@ blue = (0, 0, 128)
 black=(0,0,0)
 purple=(153,50,204)
 orange=(255,140,0)
+seagreen=(32,178,170)
 # initialize game engine
 pygame.init()
 
@@ -68,7 +69,7 @@ while(index>=91):
 
 
 #defining the button for dice roll
-mybutton=button((33,33,200),750,100,110,70,"ROLL")
+mybutton=button((33,33,200),750,100,110,50,"ROLL")
 
 #defining the test format for roll
 font = pygame.font.Font('freesansbold.ttf', 50)
@@ -143,9 +144,13 @@ while(dead==False):
     text2 = font2.render("TURNS", True, purple, orange)
     screen.blit(text2, [700, 500])
 
+    font22 = pygame.font.Font('freesansbold.ttf', 17)
+    text22 = font22.render("Roll Button rolls the die", True, seagreen, black)
+    screen.blit(text22, [700, 70])
+
     font3 = pygame.font.Font('freesansbold.ttf', 58)
-    text3 = font2.render(str(turn), True, purple, black)
-    screen.blit(text3, [750, 600])
+    text3 = font2.render(str(turn), True, purple, orange)
+    screen.blit(text3, [780, 600])
 
 
     pygame.display.flip()
