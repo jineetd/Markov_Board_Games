@@ -1,6 +1,7 @@
 # import pygame
 import pygame
 from button_module import *
+from position_map import *
 import random
 
 #initializing the colors
@@ -8,7 +9,8 @@ white = (255, 255, 255)
 green = (0, 255, 0) 
 blue = (0, 0, 128) 
 black=(0,0,0)
-
+purple=(153,50,204)
+orange=(255,140,0)
 # initialize game engine
 pygame.init()
 
@@ -23,13 +25,24 @@ size = (window_width, window_height)
 screen = pygame.display.set_mode(size)
 
 # Set title to the window
-pygame.display.set_caption("Hello World")
+pygame.display.set_caption("Snake And Ladder Simulator")
 
 dead=False
 
 clock = pygame.time.Clock()
+#chessboard image
 background_image = pygame.image.load("board.gif").convert()
 background_image = pygame.transform.scale(background_image, (700, 700))
+
+#win image 
+win_image= pygame.image.load("win.jpg").convert()
+win_image= pygame.transform.scale(win_image, (700, 700))
+
+#mario image
+mario= pygame.image.load("mario2.png").convert()
+mario= pygame.transform.scale(mario, (60, 60))
+
+
 
 #assigning co-ordinates to the squares
 dict={}
@@ -61,6 +74,7 @@ mybutton=button((33,33,200),750,100,110,70,"ROLL")
 font = pygame.font.Font('freesansbold.ttf', 50)
 
 position=-1
+turn=0
 #x,y=dict[1]
 #pygame.draw.rect(screen,(0,100,100),pygame.Rect(x,y,20,20))
 while(dead==False):
@@ -76,6 +90,7 @@ while(dead==False):
 					text = font1.render("KEEP ROLLING TILL 6!!!", True, green, blue)
 					screen.blit(text, [700, 200])
 					print("Val is:"+str(val))
+					turn=turn+1
 					continue
                 if(position<0 and val==6):
                 	print("insdie")
@@ -90,7 +105,13 @@ while(dead==False):
  
                 
                 print(position)
-                position=position+val
+                if((position+val) in pos_map):
+                	position=pos_map[position+val]
+                elif(position+val<=100):
+                	position=position+val
+                else:
+                	position=position
+                turn=turn+1
                 #print(position)
                 text = font.render(str(val), True, green, blue)
                 screen.blit(text, [785, 200])
@@ -106,11 +127,26 @@ while(dead==False):
             dead = True
 
     mybutton.draw(screen)
-    screen.blit(background_image, [0, 0])
+    if(position==100):
+    	screen.blit(win_image, [0, 0])
+    else:
+    	screen.blit(background_image, [0, 0])
 
     #(x,y,width,length)
     x,y=dict[position]
-    pygame.draw.rect(screen,blue,pygame.Rect(x,y,20,20))
+    #pygame.draw.rect(screen,blue,pygame.Rect(x,y,20,20))
+    rect = mario.get_rect()
+    rect.center = (x+8, y+15)
+    screen.blit(mario, rect)
+    #displaying the turns
+    font2 = pygame.font.Font('freesansbold.ttf', 58)
+    text2 = font2.render("TURNS", True, purple, orange)
+    screen.blit(text2, [700, 500])
+
+    font3 = pygame.font.Font('freesansbold.ttf', 58)
+    text3 = font2.render(str(turn), True, purple, black)
+    screen.blit(text3, [750, 600])
+
 
     pygame.display.flip()
     clock.tick(clock_tick_rate)
